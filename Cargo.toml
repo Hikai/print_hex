@@ -1,0 +1,6 @@
+[package]
+name = "print_hex"
+version = "0.1.0"
+authors = ["Bahyun Lee <bahyun.lee@gmail.com>"]
+
+[dependencies]
