@@ -65,7 +65,7 @@ fn main() {
     let args: Vec<_> = env::args().collect();
 
     if args.len() != 2 {
-        println!("Usage: binary_open.exe [filename]");
+        println!("Usage: print_hex [filename]");
         std::process::exit(1);
     }
 
@@ -75,7 +75,7 @@ fn main() {
 
     let mut count = 0;
     for byte in store.iter() {
-        print!("{:3} ", to_hex(*byte));
+        print!("{:02} ", to_hex(*byte));
         if count >= 7 {
             println!("");
 
