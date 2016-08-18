@@ -18,8 +18,8 @@ fn alphabet_match_upper (hex: u8) -> String {
     return alphabet;
 }
 
-fn file_read(ref_path: &OsStr) -> [u8; 1024] {
-    let mut byte_store = [0u8; 1024];
+fn file_read(ref_path: &OsStr) -> [u8; 64] {
+    let mut byte_store = [0u8; 64];
 
     let path = Path::new(ref_path);
     let mut file = File::open(&path).unwrap();
@@ -70,14 +70,19 @@ fn main() {
     }
 
     let ref_osstr: &OsStr = ref_str_to_ref_osstr(&args[1]);
-
     let store = file_read(ref_osstr);
 
     let mut count = 0;
+
+    let mut head_addr: u32 = 0;
+    print!("{:08} ", to_hex(head_addr as u8));
     for byte in store.iter() {
         print!("{:02} ", to_hex(*byte));
+
         if count >= 7 {
             println!("");
+            head_addr += 8;
+            print!("{:08} ", to_hex(head_addr as u8));
 
             count = 0;
         }
