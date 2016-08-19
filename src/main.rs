@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 
-fn alphabet_match_upper (hex: u8) -> String {
+fn alphabet_match_upper (hex: u32) -> String {
     let alphabet = match hex {
         10 => "A".to_string(),
         11 => "B".to_string(),
@@ -18,8 +18,8 @@ fn alphabet_match_upper (hex: u8) -> String {
     return alphabet;
 }
 
-fn file_read(ref_path: &OsStr) -> [u8; 64] {
-    let mut byte_store = [0u8; 64];
+fn file_read(ref_path: &OsStr) -> [u8; 16] {
+    let mut byte_store = [0u8; 16];
 
     let path = Path::new(ref_path);
     let mut file = File::open(&path).unwrap();
@@ -34,7 +34,25 @@ fn ref_str_to_ref_osstr(arg_filename: &str) -> &OsStr {
     return ref_osstr;
 }
 
-fn to_hex (chr: u8) -> String {
+fn str_format(str_base: String, len_total: usize) -> String {
+    let mut len = len_total - str_base.len();
+    let mut str_add = "".to_string();
+
+    loop {
+        if len == 0 {
+            break;
+        }
+
+        str_add.push('0');
+        len -= 1;
+    }
+
+    str_add.push_str(&str_base);
+
+    return str_add;
+}
+
+fn to_hex (chr: u32) -> String {
     let mut hex_operand = chr;
     let mut vec_hex = Vec::new();
     let mut str_result = String::new();
@@ -75,14 +93,21 @@ fn main() {
     let mut count = 0;
 
     let mut head_addr: u32 = 0;
-    print!("{:08} ", to_hex(head_addr as u8));
+    print!("{} ", str_format(to_hex(head_addr), 8));
+
+    let mut vec_chr = Vec::new();
     for byte in store.iter() {
-        print!("{:02} ", to_hex(*byte));
+        print!("{:02} ", to_hex(*byte as u32));
+        vec_chr.push(*byte as char);
 
         if count >= 7 {
+            for chr in &vec_chr {
+                print!("{} ", chr)
+            }
+            vec_chr.clear();
             println!("");
             head_addr += 8;
-            print!("{:08} ", to_hex(head_addr as u8));
+            print!("{} ", str_format(to_hex(head_addr), 8));
 
             count = 0;
         }
