@@ -18,12 +18,12 @@ fn alphabet_match_upper (hex: u32) -> String {
     return alphabet;
 }
 
-fn file_read(ref_path: &OsStr) -> [u8; 16] {
-    let mut byte_store = [0u8; 16];
+fn file_read(ref_path: &OsStr) -> Vec<u8> {
+    let mut byte_store = vec![];
 
     let path = Path::new(ref_path);
     let mut file = File::open(&path).unwrap();
-    file.read(&mut byte_store).unwrap();
+    file.read_to_end(&mut byte_store).unwrap();
 
     return byte_store;
 }
@@ -79,6 +79,13 @@ fn to_hex (chr: u32) -> String {
     return str_result;
 }
 
+fn u8_to_chr(ascii: u8) -> char {
+    if ascii == 0 {
+        return '.';
+    }
+    return ascii as char;
+}
+
 fn main() {
     let args: Vec<_> = env::args().collect();
 
@@ -98,11 +105,11 @@ fn main() {
     let mut vec_chr = Vec::new();
     for byte in store.iter() {
         print!("{:02} ", to_hex(*byte as u32));
-        vec_chr.push(*byte as char);
+        vec_chr.push(u8_to_chr(*byte));
 
         if count >= 7 {
             for chr in &vec_chr {
-                print!("{} ", chr)
+                print!("{}", chr)
             }
             vec_chr.clear();
             println!("");
