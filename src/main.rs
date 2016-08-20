@@ -80,8 +80,11 @@ fn to_hex (chr: u32) -> String {
 }
 
 fn u8_to_chr(ascii: u8) -> char {
-    if ascii == 0 {
-        return '.';
+    let arr_escape = [0u8, 8, 9, 10, 11, 12, 13];
+    for chr in arr_escape.iter() {
+        if ascii == *chr {
+            return '.';
+        }
     }
     return ascii as char;
 }
